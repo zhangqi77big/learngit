@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using System.Data.SqlClient;
+
+namespace pro3._2
+{
+    public class SqlHelper
+    {
+        //获取连接字符串
+        private static readonly string constr = ConfigurationManager.ConnectionStrings["connectionStr"].ConnectionString;
+        //ExecuteNonQuery()方法
+        //ExecuteScalar()方法
+        //ExecuteReader()方法
+        //ExecuteDataTable()方法
+
+        //执行增删改的
+        public static int ExecuteNonQuery(string sql, params SqlParameter[] pms)
+        { 
+            //使用using关键字定义一个范围，在范围结束时自动调用这个类实例的Dispose处理对象
+            using (SqlConnection con = new SqlConnection(constr))
+            { 
+                //创建执行Sql命令对象
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                { 
+                    //判断是否传递了sql参数
+                    if (pms != null)
+                    { 
+                        //将参数添加到Parameters集合中
+                        cmd.Parameters.AddRange(pms);
+
+                    }
+                    con.Open();
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+}
